@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Room {
+  id        Int        @id @default(autoincrement())
+  ServerId  String     @default(uuid())
+  roomName  String
+  createdAt DateTime   @default(now())
+  admin     Int
+  story     Story[]
+  UserRoom  UserRoom[]
+}
+
+model Story {
+  id        Int      @id @default(autoincrement())
+  storyName String
+  voted     Boolean  @default(false)
+  createdAt DateTime @default(now())
+  voting    Boolean  @default(false)
+  roomId    Int
+  votes     Vote[]
+  room      Room     @relation(fields: [roomId], references: [id])
+}
+
+model Vote {
+  id      Int      @id @default(autoincrement())
+  userId  Int
+  vote    Decimal
+  time    DateTime @default(now())
+  storyId Int
+  user    User     @relation(fields: [userId], references: [id])
+  story   Story    @relation(fields: [storyId], references: [id])
+}
+
+model User {
+  id       Int        @id @default(autoincrement())
+  Name     String
+  Password String
+  IsAdmin  Boolean    @default(false)
+  Vote     Vote[]
+  UserRoom UserRoom[]
+}
+
+model UserRoom {
+  roomId Int
+  userId Int
+
+  room Room @relation(fields: [roomId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@id([roomId, userId])
+}

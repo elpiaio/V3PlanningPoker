@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  db-postgres-planningpoker:
+    image: postgres:alpine
+    ports:
+      - "5432:5432"
+    container_name: "db-postgres-planningpoker"
+    restart: always
+    volumes:
+      - ./db-postgres-planningpoker:/var/lib/postgres/data
+    environment:
+      - POSTGRES_USER=pguser
+      - POSTGRES_PASSWORD=pgpassword
+      - POSTGRES_DB=db-postgres-planningpoker
+
+  redis:
+    image: bitnami/redis:latest
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'poker_redis_data:/bitnami/redis/data'
+
+volumes:
+  db-postgres-planningpoker-api:
+  poker_redis_data:
