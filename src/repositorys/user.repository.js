@@ -1,11 +1,30 @@
 import { prisma } from "../services/prisma";
 
 export const createUser = async (data) => {
+    // Verifica se já existe um usuário com o mesmo nome
+    const existingUser = await prisma.user.findFirst({
+        where: {
+            Name: data.Name
+        }
+    });
+
+    console.log(existingUser)
+    if (existingUser) {
+        throw new Error('Usuário já existe');
+    }
+
+    // Cria o usuário caso ele não exista
     const user = await prisma.user.create({
         data
-    })
-    return user
-}
+    });
+    user.UserRoom = await prisma.userRoom.findMany({
+        where: {
+            userId: user.id
+        }
+    });
+    return user;
+};
+
 
 export const getUsersRoom = async (roomId) => {
     const users = await prisma.user.findMany({
@@ -26,6 +45,13 @@ export const getById = async (id) => {
             id,  //id:id
         }
     });
+
+    user.UserRoom = await prisma.userRoom.findMany({
+        where: {
+            userId: user.id
+        }
+    });
+
     return user;
 }
 
@@ -54,13 +80,13 @@ export const joinUserRoom = async (userId, roomId) => {
         where: {
             userId: userId,
             roomId: roomId
-        }    
+        }
     });
 
     if (existingUserRoom) throw new Error("User is already in the room");
 
     await prisma.userRoom.create({
-        data: { 
+        data: {
             userId: userId,
             roomId: roomId
         }
@@ -69,7 +95,7 @@ export const joinUserRoom = async (userId, roomId) => {
     const userRoom = prisma.userRoom.findMany({
         where: {
             roomId: roomId
-        }  
+        }
     })
 
     return userRoom;
@@ -95,7 +121,7 @@ export const exitUserRoom = async (userId, roomId) => {
     const users = await prisma.userRoom.findMany({
         where: {
             roomId: roomId
-        }  
+        }
     })
 
     return users;
@@ -104,14 +130,8 @@ export const exitUserRoom = async (userId, roomId) => {
 export const loginUser = async (data) => {
     const user = await prisma.user.findFirstOrThrow({
         where: {
-           Password: data.Password,
-           Name: data.Name
-        } 
-    });
-
-    user.UserRoom = await prisma.userRoom.findMany({
-        where: {
-            userId: user.id
+            Password: data.Password,
+            Name: data.Name
         }
     });
     return user;

@@ -57,3 +57,26 @@ export const getRoomById = async (id) => {
     }
     return room;
 }
+
+export const getRoomByIdSimple = async (id) => {
+    const room = await prisma.room.findUnique({
+        where: {
+            id
+        }
+    });
+
+    return room
+}
+
+export const getRoomByUserId = async (id) => {
+    const room = await prisma.userRoom.findMany({
+        where: {
+            userId: id
+        },
+        include: {
+            room: true
+        }
+    });
+
+    return room;
+}
