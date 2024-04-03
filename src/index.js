@@ -12,7 +12,7 @@ const app = fastify();
 
 app.register(cors, {
   origin: true
-});
+}); 
 
 app.register(websocket);
 app.register(userRoutes);

@@ -1,5 +1,5 @@
 import { voting } from "../../pubsub/voting-pub-sub";
-import { createStory, deleteStory, get} from "../repositorys/story.repository";
+import { createStory, deleteStory, get } from "../repositorys/story.repository";
 
 export const create = async (req, res) => {
     try {
@@ -13,7 +13,7 @@ export const create = async (req, res) => {
 
 export const remove = async (req, res) => {
     try {
-        const stories =await deleteStory(Number(req.params.id));
+        const stories = await deleteStory(Number(req.params.id));
         voting.publish(stories[0].roomId, stories)
         res.status(200).send(stories);
     } catch (e) {

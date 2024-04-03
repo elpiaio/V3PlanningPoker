@@ -25,7 +25,6 @@ export const createUser = async (data) => {
     return user;
 };
 
-
 export const getUsersRoom = async (roomId) => {
     const users = await prisma.user.findMany({
         where: {
@@ -75,11 +74,11 @@ export const deleteUser = async (id) => {
     return user;
 }
 
-export const joinUserRoom = async (userId, roomId) => {
+export const joinUserRoom = async (data) => {
     const existingUserRoom = await prisma.userRoom.findFirst({
         where: {
-            userId: userId,
-            roomId: roomId
+            userId: data.userId,
+            roomId: data.roomId
         }
     });
 
@@ -87,14 +86,14 @@ export const joinUserRoom = async (userId, roomId) => {
 
     await prisma.userRoom.create({
         data: {
-            userId: userId,
-            roomId: roomId
+            userId: data.userId,
+            roomId: data.roomId
         }
     });
 
     const userRoom = prisma.userRoom.findMany({
         where: {
-            roomId: roomId
+            roomId: data.roomId
         }
     })
 

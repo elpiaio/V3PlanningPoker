@@ -50,7 +50,7 @@ export const remove = async (req, res) => {
 
 export const insert = async (req, res) => {
     try {
-        const userRoom = await joinUserRoom(Number(req.params.userId), Number(req.params.roomId));
+        const userRoom = await joinUserRoom(req.body);
         res.status(200).send(userRoom)
         voting.publish(req.params.userId, userRoom)
     } catch (e) {

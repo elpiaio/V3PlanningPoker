@@ -18,20 +18,20 @@ model Room {
   ServerId  String     @default(uuid())
   roomName  String
   createdAt DateTime   @default(now())
-  admin     Int
   story     Story[]
   UserRoom  UserRoom[]
 }
 
 model Story {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   storyName String
-  voted     Boolean  @default(false)
-  createdAt DateTime @default(now())
-  voting    Boolean  @default(false)
+  voted     Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  finishAt  DateTime? 
+  voting    Boolean   @default(false)
   roomId    Int
   votes     Vote[]
-  room      Room     @relation(fields: [roomId], references: [id])
+  room      Room      @relation(fields: [roomId], references: [id])
 }
 
 model Vote {
@@ -48,7 +48,6 @@ model User {
   id       Int        @id @default(autoincrement())
   Name     String
   Password String
-  IsAdmin  Boolean    @default(false)
   Vote     Vote[]
   UserRoom UserRoom[]
 }
