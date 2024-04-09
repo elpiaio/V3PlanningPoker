@@ -23,15 +23,17 @@ model Room {
 }
 
 model Story {
-  id        Int       @id @default(autoincrement())
-  storyName String
-  voted     Boolean   @default(false)
-  createdAt DateTime  @default(now())
-  finishAt  DateTime? 
-  voting    Boolean   @default(false)
-  roomId    Int
-  votes     Vote[]
-  room      Room      @relation(fields: [roomId], references: [id])
+  id          Int       @id @default(autoincrement())
+  storyName   String
+  createdAt   DateTime  @default(now())
+  roomId      Int
+  finishAt    DateTime?
+  voted       Boolean   @default(false)
+  voting      Boolean   @default(false)
+  showVotes   Boolean   @default(false)
+  showResults Boolean   @default(false)
+  votes       Vote[]
+  room        Room      @relation(fields: [roomId], references: [id])
 }
 
 model Vote {

@@ -1,4 +1,4 @@
-import { createRoom, getRoom, getRoomById, getRoomByIdSimple, getRoomByUserId } from "../repositorys/room.repository";
+import { createRoom, getRoom, getRoomById, getRoomByIdSimple, getRoomByUserId, getRooms } from "../repositorys/room.repository";
 import { voting } from "../../pubsub/voting-pub-sub";
 
 export const create = async (req, res) => {
@@ -13,7 +13,7 @@ export const create = async (req, res) => {
 
 export const get = async (req, res) => {
     try {
-        const rooms = await getRoom();
+        const rooms = await getRooms();
         res.status(200).send(rooms);
     } catch (e) {
         res.status(400).send(e);
@@ -46,7 +46,3 @@ export const getRoomByUser = async (req, res) => {
         res.status(400).send(e);
     }
 }
-
-
-
-

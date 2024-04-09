@@ -10,7 +10,7 @@ export const create = async (req, res) => {
     }
 }
 
-export const getUserRoom  = async (req, res) => {
+export const getUsersRoom  = async (req, res) => {
     try {
         const users = await getUsersRoom(Number(req.params.roomId));
         voting.publish(req.params.roomId, users)
@@ -21,7 +21,7 @@ export const getUserRoom  = async (req, res) => {
     }
 }
 
-export const getId = async (req, res) => {
+export const getById = async (req, res) => {
     try {
         const user = await getById(Number(req.params.id));
         res.status(200).send(user)

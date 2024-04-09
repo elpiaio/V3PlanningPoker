@@ -1,8 +1,6 @@
 import { prisma } from "../services/prisma";
 
 export const createVote = async (data) => {
-
-    
     const existingVote = await prisma.vote.findFirst({
         where: {
             userId: data.userId,

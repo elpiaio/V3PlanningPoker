@@ -4,6 +4,7 @@ import { voting } from "../../pubsub/voting-pub-sub";
 export const create = async (req, res) => {
     try {
         const vote = await createVote(req.body);
+        vote.type = 'vote';
         voting.publish(vote.storyId, vote)
         res.status(200).send(vote)
     } catch (e) {

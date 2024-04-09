@@ -1,9 +1,9 @@
-import { create,getId, update, remove, insert, leaveRoom, login, getUserRoom } from "../controllers/user.controller";
+import { create,getById, update, remove, insert, leaveRoom, login, getUsersRoom } from "../controllers/user.controller";
 
 export const userRoutes = async app => {
     app.post("/user", create);
-    app.get("/userRoom/:roomId", getUserRoom);
-    app.get("/user/:id", getId);
+    app.get("/room/users/:roomId", getUsersRoom);
+    app.get("/user/:id", getById);
     app.put("/user/:id", update);
     app.delete("/user/:id", remove);
     app.post("/user/insert", insert);
