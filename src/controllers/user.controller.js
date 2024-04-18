@@ -1,4 +1,4 @@
-import { voting } from "../../pubsub/voting-pub-sub";
+import { voting,roomws } from "../../pubsub/pub-sub";
 import { createUser, getUsersRoom, getById, updateUser, deleteUser, joinUserRoom, exitUserRoom, loginUser } from "../repositorys/user.repository";
 
 export const create = async (req, res) => {
@@ -16,7 +16,6 @@ export const getUsersRoom  = async (req, res) => {
         voting.publish(req.params.roomId, users)
         res.status(200).send(users)
     } catch (e) {
-        console.log(e)
         res.status(400).send(e)
     }
 }
@@ -52,7 +51,7 @@ export const insert = async (req, res) => {
     try {
         const userRoom = await joinUserRoom(req.body);
         res.status(200).send(userRoom)
-        voting.publish(req.params.userId, userRoom)
+        roomws.publish(req.params.userId, userRoom)
     } catch (e) {
         res.status(400).send(e)
     }
@@ -61,7 +60,7 @@ export const insert = async (req, res) => {
 export const leaveRoom = async (req, res) => {
     try {
         const users = await exitUserRoom(Number(req.params.userId), Number(req.params.roomId));
-        voting.publish(req.params.userId, users)
+        roomws.publish(req.params.userId, users)
         res.status(200).send(users)
     } catch (e) {
         res.status(400).send(e)

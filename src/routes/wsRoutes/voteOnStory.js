@@ -1,7 +1,7 @@
 import { json } from "stream/consumers";
 import { watch } from "../../controllers/story.controller";
 import { Console } from "console";
-import { voting } from "../../../pubsub/voting-pub-sub";
+import { voting , roomws } from "../../../pubsub/pub-sub";
 
 const connections = [];
 
@@ -21,7 +21,7 @@ export const wsRoutes = async (app) => {
         const {roomId} = req.params;
         connection.socket.send(JSON.stringify({roomId: req.params.roomId}));
 
-        voting.subscribe(roomId, (message) => {
+        roomws.subscribe(roomId, (message) => {
             connection.socket.send(JSON.stringify(message))
         })
     })

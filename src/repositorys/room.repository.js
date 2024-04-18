@@ -1,7 +1,6 @@
 import { prisma } from "../services/prisma";
 
 export const createRoom = async (data, userId) => {
-    //console.log(data)
     const room = await prisma.room.create({
         data: {
             ...data,
@@ -28,7 +27,7 @@ export const getRooms = async (data) => {
 export const getRoomById = async (id) => {
     const room = await prisma.room.findUnique({
         where: {
-           id
+            id
         },
         include: {
             UserRoom: {
@@ -63,6 +62,32 @@ export const getRoomByUserId = async (id) => {
         },
         include: {
             room: true
+        }
+    });
+
+    return room;
+}
+
+
+export const activeStoryRepository = async (id, data) => {
+    const room = await prisma.room.update({
+        where: {
+            id
+        },
+        data: {
+            storyActive: data.storyActive
+        },
+        include: {
+            UserRoom: {
+                include: {
+                    user: true
+                }
+            },
+            story: {
+                include: {
+                    votes: true
+                }
+            }
         }
     });
 

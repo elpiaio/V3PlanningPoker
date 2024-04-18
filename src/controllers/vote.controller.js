@@ -1,5 +1,5 @@
 import { createVote, updateVote , votingTrue } from "../repositorys/vote.repository";
-import { voting } from "../../pubsub/voting-pub-sub";
+import { voting } from "../../pubsub/pub-sub";
 
 export const create = async (req, res) => {
     try {

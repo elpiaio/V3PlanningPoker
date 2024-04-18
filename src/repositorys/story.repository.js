@@ -47,26 +47,28 @@ export const deleteStory = async (id) => {
 }
 
 export const get = async (id) => {
-    const stories = await prisma.story.findMany({
+    const stories = await prisma.story.findUnique({
         where: {
-            roomId: id
+            id: id
+        },
+        include: {
+            votes: true
         }
     });
     return stories;
 }
 
-
 //configuração de adm
 
-export const VotedRep = async (id, data) => {
-    const story = await prisma.story.update({
-        where: {
-            id: id
-        },
-        data: { ...data, finishAt: new Date() }
-    });
-    return story;
-}
+// export const VotedRep = async (id, data) => {
+//     const story = await prisma.story.update({
+//         where: {
+//             id: id
+//         },
+//         data: { ...data, finishAt: new Date() }
+//     });
+//     return story;
+// }
 
 export const VotingRep = async (id, data) => {
     const updatedStory = await prisma.story.update({
@@ -118,6 +120,9 @@ export const showVotesRep = async (id, data) => {
         },
         data: {
             showVotes: newShowVotesValue
+        },
+        include: {
+            votes: true
         }
     });
 
@@ -135,12 +140,16 @@ export const finishVotationRep = async (id, data) => {
             voted: true,
             showVotes: true,
             finishAt: new Date()
+        },
+        include: {
+            votes: true
         }
     })
+
     return story;
 }
 
-export const RefreshRep = async (id,data) => {
+export const RefreshRep = async (id, data) => {
     try {
         const result = await prisma.vote.deleteMany({
             where: {

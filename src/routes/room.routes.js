@@ -1,4 +1,4 @@
-import { create, get, getById, getByIdSimple, getRoomByUser } from "../controllers/room.controller";
+import { activeStory, create, get, getById, getByIdSimple, getRoomByUser, } from "../controllers/room.controller";
 
 export const roomRoutes = async app => {
     app.post("/room/:idUser", create);
@@ -6,4 +6,5 @@ export const roomRoutes = async app => {
     app.get("/room/:id", getById);
     app.get("/room/simple/:id", getByIdSimple)
     app.get("/user/rooms/:id", getRoomByUser)
+    app.put("/activeStory/:id", activeStory)
 }

@@ -8,7 +8,6 @@ export const createUser = async (data) => {
         }
     });
 
-    console.log(existingUser)
     if (existingUser) {
         throw new Error('Usuário já existe');
     }
@@ -101,29 +100,18 @@ export const joinUserRoom = async (data) => {
 }
 
 export const exitUserRoom = async (userId, roomId) => {
+    try {
+        await prisma.userRoom.deleteMany({
+            where: {
+                userId: userId,
+                roomId: roomId,
+            }
+        });
+        return userId;
 
-    const existingUserRoom = await prisma.userRoom.findFirst({
-        where: {
-            userId: userId,
-            roomId: roomId
-        }
-    });
-    console.log(existingUserRoom)
-
-    await prisma.userRoom.deleteMany({
-        where: {
-            userId: userId,
-            roomId: roomId,
-        }
-    });
-
-    const users = await prisma.userRoom.findMany({
-        where: {
-            roomId: roomId
-        }
-    })
-
-    return users;
+    } catch (e) {
+        console.log(e)
+    }
 }
 
 export const loginUser = async (data) => {

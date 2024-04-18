@@ -7,7 +7,6 @@ export const createVote = async (data) => {
             storyId: data.storyId,
         }
     });
-    console.log(existingVote)
 
     if (existingVote) {
         await prisma.vote.updateMany({
@@ -21,10 +20,22 @@ export const createVote = async (data) => {
         });
         return data;
     } else {
-        const vote = await prisma.vote.create({
-            data
+
+        const voteValue = data.vote; // ou qualquer outra lógica para obter o valor do voto
+        
+        const vote2 = await prisma.vote.create({
+          data: {
+            userId: data.userId,
+            vote: voteValue,
+            storyId: data.storyId
+          }
         })
-        return vote
+
+
+        // const vote = await prisma.vote.create({
+        //     data
+        // })
+        return vote2
     }
 }
 
@@ -46,8 +57,6 @@ export const votingTrue = async (data) => {
             voting: true
         }
     });
-
-    console.log(stories);
 
     for (let i = 0; i < stories.length; i++) {
         const story = stories[i];
