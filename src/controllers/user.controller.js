@@ -1,5 +1,5 @@
 import { voting,roomws } from "../../pubsub/pub-sub";
-import { createUser, getUsersRoom, getById, updateUser, deleteUser, joinUserRoom, exitUserRoom, loginUser } from "../repositorys/user.repository";
+import { createUser, getUsersRoom, getById, updateUser, deleteUser, insertUserRoom, exitUserRoom, loginUser } from "../repositorys/user.repository";
 
 export const create = async (req, res) => {
     try {
@@ -49,9 +49,11 @@ export const remove = async (req, res) => {
 
 export const insert = async (req, res) => {
     try {
-        const userRoom = await joinUserRoom(req.body);
+        const userRoom = await insertUserRoom(req.body);
+        userRoom.type = 'insertUser';
+        console.log(req.body.roomId)
+        roomws.publish(req.body.roomId, userRoom)
         res.status(200).send(userRoom)
-        roomws.publish(req.params.userId, userRoom)
     } catch (e) {
         res.status(400).send(e)
     }

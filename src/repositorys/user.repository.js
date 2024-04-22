@@ -73,7 +73,7 @@ export const deleteUser = async (id) => {
     return user;
 }
 
-export const joinUserRoom = async (data) => {
+export const insertUserRoom = async (data) => {
     const existingUserRoom = await prisma.userRoom.findFirst({
         where: {
             userId: data.userId,
@@ -83,19 +83,15 @@ export const joinUserRoom = async (data) => {
 
     if (existingUserRoom) throw new Error("User is already in the room");
 
-    await prisma.userRoom.create({
+    const userRoom = await prisma.userRoom.create({
         data: {
             userId: data.userId,
             roomId: data.roomId
+        },
+        include: {
+            user: true
         }
     });
-
-    const userRoom = prisma.userRoom.findMany({
-        where: {
-            roomId: data.roomId
-        }
-    })
-
     return userRoom;
 }
 

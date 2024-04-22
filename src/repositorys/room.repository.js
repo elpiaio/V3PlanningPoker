@@ -45,10 +45,10 @@ export const getRoomById = async (id) => {
     return room;
 }
 
-export const getRoomByIdSimple = async (id) => {
-    const room = await prisma.room.findUnique({
+export const getRoomByIdGuidSimple = async (id) => {
+    const room = await prisma.room.findFirst({
         where: {
-            id
+            ServerId: id
         }
     });
 
@@ -70,6 +70,15 @@ export const getRoomByUserId = async (id) => {
 
 
 export const activeStoryRepository = async (id, data) => {
+    const story = await prisma.story.update({
+        where: {
+            id: data.storyActive
+        },
+        data: {
+            startedAt: new Date()
+        }
+    })
+
     const room = await prisma.room.update({
         where: {
             id
@@ -93,3 +102,29 @@ export const activeStoryRepository = async (id, data) => {
 
     return room;
 }
+
+
+export const visualizationModeRep = async (id, data) => {
+    const room = await prisma.room.update({
+        where: {
+            id
+        },
+        data: {
+            storyActive: data.storyActive
+        },
+        include: {
+            UserRoom: {
+                include: {
+                    user: true
+                }
+            },
+            story: {
+                include: {
+                    votes: true
+                }
+            }
+        }
+    });
+
+    return room;
+}    

@@ -131,23 +131,28 @@ export const showVotesRep = async (id, data) => {
 
 
 export const finishVotationRep = async (id, data) => {
-    const story = await prisma.story.update({
-        where: {
-            id: data.storyId
-        },
-        data: {
-            showResults: true,
-            voted: true,
-            showVotes: true,
-            finishAt: new Date()
-        },
-        include: {
-            votes: true
-        }
-    })
-
-    return story;
+    try {
+        const story = await prisma.story.update({
+            where: {
+                id: data.storyId
+            },
+            data: {
+                showResults: true,
+                voted: true,
+                showVotes: true,
+                finishAt: new Date()
+            },
+            include: {
+                votes: true
+            }
+        })
+    
+        return story;
+    } catch (error) {
+        console.log(error)
+    }
 }
+
 
 export const RefreshRep = async (id, data) => {
     try {
