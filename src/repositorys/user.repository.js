@@ -14,13 +14,14 @@ export const createUser = async (data) => {
 
     // Cria o usuário caso ele não exista
     const user = await prisma.user.create({
-        data
-    });
-    user.UserRoom = await prisma.userRoom.findMany({
-        where: {
-            userId: user.id
+        data,
+        select: {
+            id: true,
+            Name: true,
+            Password: false
         }
     });
+
     return user;
 };
 
@@ -115,6 +116,11 @@ export const loginUser = async (data) => {
         where: {
             Password: data.Password,
             Name: data.Name
+        },
+        select: {
+            id: true,
+            Name: true,
+            Password: false,
         }
     });
     return user;

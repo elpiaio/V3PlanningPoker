@@ -14,15 +14,5 @@ services:
       - POSTGRES_PASSWORD=pgpassword
       - POSTGRES_DB=db-postgres-planningpoker
 
-  redis:
-    image: bitnami/redis:latest
-    environment:
-      - ALLOW_EMPTY_PASSWORD=yes
-    ports:
-      - '6379:6379'
-    volumes:
-      - 'poker_redis_data:/bitnami/redis/data'
-
 volumes:
   db-postgres-planningpoker-api:
-  poker_redis_data:

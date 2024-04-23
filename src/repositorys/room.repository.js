@@ -32,7 +32,13 @@ export const getRoomById = async (id) => {
         include: {
             UserRoom: {
                 include: {
-                    user: true
+                    user: {
+                        select: {
+                            id: true,
+                            Name: true,
+                            Password: false
+                        }
+                    }
                 }
             },
             story: {
