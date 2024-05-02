@@ -1,5 +1,5 @@
-import { voting,roomws } from "../../pubsub/pub-sub";
-import { createUser, getUsersRoom, getById, updateUser, deleteUser, insertUserRoom, exitUserRoom, loginUser } from "../repositorys/user.repository";
+import { voting, roomws } from "../../pubsub/pub-sub";
+import { createUser, getUsersRoom, getById, updateUser, deleteUser, insertUserRoom, exitUserRoom, loginUser, emailValidatorRepository } from "../repositorys/user.repository";
 
 export const create = async (req, res) => {
     try {
@@ -10,7 +10,17 @@ export const create = async (req, res) => {
     }
 }
 
-export const getUsersRoom  = async (req, res) => {
+export const emailValidator = async (req, res) => {
+    try {
+        const Number = await emailValidatorRepository(req.body);
+        res.status(200).send(Number)
+    } catch (e) {
+        res.status(400).send(e)
+    }
+   
+}
+
+export const getUsersRoom = async (req, res) => {
     try {
         const users = await getUsersRoom(Number(req.params.roomId));
         voting.publish(req.params.roomId, users)

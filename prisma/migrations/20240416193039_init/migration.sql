@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Vote" ALTER COLUMN "vote" SET DATA TYPE TEXT;

@@ -4,7 +4,7 @@ CREATE TABLE "Room" (
     "ServerId" TEXT NOT NULL,
     "roomName" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "admin" INTEGER NOT NULL,
+    "storyActive" INTEGER,
 
     CONSTRAINT "Room_pkey" PRIMARY KEY ("id")
 );
@@ -13,9 +13,13 @@ CREATE TABLE "Room" (
 CREATE TABLE "Story" (
     "id" SERIAL NOT NULL,
     "storyName" TEXT NOT NULL,
-    "voted" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "startedAt" TIMESTAMP(3),
+    "finishAt" TIMESTAMP(3),
     "roomId" INTEGER NOT NULL,
+    "voted" BOOLEAN NOT NULL DEFAULT false,
+    "showVotes" BOOLEAN NOT NULL DEFAULT false,
+    "showResults" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "Story_pkey" PRIMARY KEY ("id")
 );
@@ -24,7 +28,7 @@ CREATE TABLE "Story" (
 CREATE TABLE "Vote" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
-    "vote" DECIMAL(65,30) NOT NULL,
+    "vote" TEXT NOT NULL,
     "time" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "storyId" INTEGER NOT NULL,
 
@@ -35,8 +39,8 @@ CREATE TABLE "Vote" (
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "Name" TEXT NOT NULL,
+    "Email" TEXT NOT NULL,
     "Password" TEXT NOT NULL,
-    "IsAdmin" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
