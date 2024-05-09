@@ -132,6 +132,12 @@ export const exitUserRoom = async (data) => {
             const user = await prisma.user.findUnique({
                 where: {
                     id: data.userId
+                },
+                select: {
+                    id: true,
+                    Email: false,
+                    Name: true,
+                    Password: false
                 }
             });
             return user;
