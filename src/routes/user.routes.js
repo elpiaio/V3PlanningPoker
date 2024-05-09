@@ -8,7 +8,7 @@ export const userRoutes = async app => {
     app.put("/user/:id", update);
     app.delete("/user/:id", remove);
     app.post("/user/insert", insert);
-    app.delete("/user/remove/:userId/:roomId", leaveRoom);
+    app.delete("/user/remove", leaveRoom);
     app.post("/user/login", login);
 }
 

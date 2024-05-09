@@ -119,18 +119,25 @@ export const insertUserRoom = async (data) => {
     return userRoom;
 }
 
-export const exitUserRoom = async (userId, roomId) => {
+export const exitUserRoom = async (data) => {
     try {
-        await prisma.userRoom.deleteMany({
+        const userRoom = await prisma.userRoom.deleteMany({
             where: {
-                userId: userId,
-                roomId: roomId,
+                userId: data.userId,
+                roomId: data.roomId
             }
         });
-        return userId;
 
+        if (userRoom) {
+            const user = await prisma.user.findUnique({
+                where: {
+                    id: data.userId
+                }
+            });
+            return user;
+        }
     } catch (e) {
-        console.log(e)
+        console.log(e);
     }
 }
 

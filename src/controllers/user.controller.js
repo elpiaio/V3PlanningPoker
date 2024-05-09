@@ -71,9 +71,10 @@ export const insert = async (req, res) => {
 
 export const leaveRoom = async (req, res) => {
     try {
-        const users = await exitUserRoom(Number(req.params.userId), Number(req.params.roomId));
-        roomws.publish(req.params.userId, users)
-        res.status(200).send(users)
+        const user = await exitUserRoom(req.body);
+        user.type = 'removeUser'; 
+        roomws.publish(req.body.roomId, user)
+        res.status(200).send(user)
     } catch (e) {
         res.status(400).send(e)
     }
