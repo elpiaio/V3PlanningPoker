@@ -113,7 +113,14 @@ export const insertUserRoom = async (data) => {
             roomId: data.roomId
         },
         include: {
-            user: true
+            user: {
+                select: {
+                    id: true,
+                    Name: true, 
+                    Email: false,
+                    Password: false
+                }
+            }
         }
     });
     return userRoom;
