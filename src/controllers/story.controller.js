@@ -1,5 +1,5 @@
 import { voting, roomws } from "../../pubsub/pub-sub";
-import { RefreshRep, VotedRep, VotingRep, createStory, deleteStory, get, showVotesRep, finishVotationRep, visualizationModeRep, userVotesRepository } from "../repositorys/story.repository";
+import { RefreshRep, VotedRep, VotingRep, createStory, deleteStory, get, showVotesRep, finishVotationRep, visualizationModeRep, userVotesRepository, CleanVotesRep } from "../repositorys/story.repository";
 
 export const create = async (req, res) => {
     try {
@@ -85,6 +85,19 @@ export const showVotes = async (req, res) => {
         story.type = "show_Votes";
         roomws.publish(req.params.id, story)
         res.status(200).send(story);
+    } catch (e) {
+        res.status(400).send(e);
+    }
+}
+
+export const CleanVotes = async (req, res) => {
+    try {
+        const status = await CleanVotesRep(Number(req.params.id), req.body);
+        if (status) {
+            status.type = "Clean";
+            roomws.publish(req.params.id, status)
+            res.status(200).send(status);
+        }
     } catch (e) {
         res.status(400).send(e);
     }

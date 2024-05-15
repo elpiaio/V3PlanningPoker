@@ -1,4 +1,4 @@
-import { Refresh, Voted, Voting, create, getAll, remove, showVotes, finishVotation, getUserVotes} from "../controllers/story.controller";
+import { Refresh, Voted, Voting, create, getAll, remove, showVotes, finishVotation, getUserVotes, CleanVotes} from "../controllers/story.controller";
 
 export const storyRoutes = async app => {
     app.post("/story", create);
@@ -10,5 +10,6 @@ export const storyRoutes = async app => {
     app.put("/story/Voting/:id", Voting);
     app.put("/story/showVotes/:id", showVotes);
     app.put("/story/finishVotation/:id", finishVotation);
+    app.put("/story/Clean/:id", CleanVotes);
     app.put("/story/Refresh/:id", Refresh);
 }

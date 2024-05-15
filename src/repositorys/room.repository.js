@@ -81,7 +81,10 @@ export const activeStoryRepository = async (id, data) => {
             id: data.storyActive
         },
         data: {
-            startedAt: new Date()
+            startedAt: new Date(),
+            finishAt: null,
+            showVotes: false,
+            voted: false
         }
     })
 

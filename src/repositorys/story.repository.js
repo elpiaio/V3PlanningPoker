@@ -76,7 +76,6 @@ export const VotingRep = async (id, data) => {
             id: data.storyId
         },
         data: {
-            voting: true,
             finishAt: null,
             voted: false
         }
@@ -153,6 +152,19 @@ export const finishVotationRep = async (id, data) => {
     }
 }
 
+export const CleanVotesRep = async (id, data) => {
+    try {
+        const result = await prisma.vote.deleteMany({
+            where: {
+                storyId: data.storyId
+            }
+        })
+        return result;
+
+    } catch (e) {
+        return e;
+    }
+}
 
 export const RefreshRep = async (id, data) => {
     try {
@@ -162,7 +174,6 @@ export const RefreshRep = async (id, data) => {
             }
         })
         return result;
-
     } catch (e) {
         return e;
     }
