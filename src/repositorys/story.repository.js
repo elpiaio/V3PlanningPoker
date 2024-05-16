@@ -76,6 +76,7 @@ export const VotingRep = async (id, data) => {
             id: data.storyId
         },
         data: {
+            voting: true,
             finishAt: null,
             voted: false
         }
@@ -174,6 +175,7 @@ export const RefreshRep = async (id, data) => {
             }
         })
         return result;
+
     } catch (e) {
         return e;
     }

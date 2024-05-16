@@ -1,5 +1,5 @@
 import { prisma } from "../services/prisma";
-import { enviarEmail } from "../services/sendEmail";
+import { sendEmail } from "../services/sendEmail";
 
 export const createUser = async (data) => {
     try {
@@ -39,7 +39,7 @@ export const emailValidatorRepository = async (data) => {
         const randomNumber = Math.floor(100000 + Math.random() * 900000);
         console.log(randomNumber);
 
-        await enviarEmail(data.Email, 'Tunad | PlanningPoker', `código de verificação ${randomNumber}`);
+        await sendEmail(data.Email, 'Tunad | PlanningPoker', `código de verificação ${randomNumber}`);
 
         return randomNumber;
     } catch (error) {

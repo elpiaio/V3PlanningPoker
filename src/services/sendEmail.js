@@ -1,4 +1,4 @@
-export const enviarEmail = async (destinatario, assunto, corpo) => {
+export const sendEmail = async (addressee, subject, body) => {
     const nodemailer = require('nodemailer');
 
     const transporter = nodemailer.createTransport({
@@ -12,14 +12,14 @@ export const enviarEmail = async (destinatario, assunto, corpo) => {
 
     const mensagem = {
         from: 'thiago.piaia@tunad.io',
-        to: destinatario,
-        subject: assunto,
-        text: corpo
+        to: addressee,
+        subject: subject,
+        text: body
     };
 
     try {
         await transporter.sendMail(mensagem);
-        console.log('Email enviado com sucesso para:', destinatario);
+        console.log('Email enviado com sucesso para:', addressee);
     } catch (error) {
         console.error('Falha ao enviar email:', error);
     }

@@ -81,7 +81,6 @@ export const leaveRoom = async (req, res) => {
 }
 
 
-
 export const login = async (req, res) => {
     try {
         const user = await loginUser(req.body);

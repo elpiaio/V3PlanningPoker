@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgresql://pguser:pgpassword@planningpoker-db:5432/db-postgres-planningpoker?schema=public"
 }
 
 model Room {
