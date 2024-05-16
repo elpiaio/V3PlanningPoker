@@ -84,7 +84,13 @@ export const activeStoryRepository = async (id, data) => {
             startedAt: new Date(),
             finishAt: null,
             showVotes: false,
-            voted: false
+            voted: false,
+        }
+    })
+
+    await prisma.vote.deleteMany({
+        where: {
+            storyId: data.storyActive
         }
     })
 
