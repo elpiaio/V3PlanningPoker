@@ -116,7 +116,7 @@ export const insertUserRoom = async (data) => {
             user: {
                 select: {
                     id: true,
-                    Name: true, 
+                    Name: true,
                     Email: false,
                     Password: false
                 }
@@ -128,6 +128,39 @@ export const insertUserRoom = async (data) => {
 
 export const exitUserRoom = async (data) => {
     try {
+        var wasAdmin = false
+        var newRoomUpdated;
+
+        const roomAndUsers = await prisma.room.findFirst({
+            where: {
+                id: data.roomId
+            },
+            include: {
+                UserRoom: {
+                    include: {
+                        user: true
+                    }
+                }
+            }
+        });
+
+        if (!roomAndUsers) {
+            throw new Error('Room not found');
+        }
+
+        if (roomAndUsers.idAdmin == data.userId) {
+            const newAdmin = roomAndUsers.UserRoom.find(ur => ur.userId !== data.userId);
+            const newAdminId = newAdmin ? newAdmin.userId : null;
+
+            if (newAdminId) {
+                newRoomUpdated = await updateAdm(newAdminId, data.roomId);
+                console.log()
+                wasAdmin = true;
+            } else {
+                throw new Error('No suitable new admin found');
+            }
+        }
+
         const userRoom = await prisma.userRoom.deleteMany({
             where: {
                 userId: data.userId,
@@ -147,11 +180,37 @@ export const exitUserRoom = async (data) => {
                     Password: false
                 }
             });
+
+            if (wasAdmin === true) {
+                user.wasAdmin = true;
+                user.newAdminId = newRoomUpdated.idAdmin;
+            }
+
             return user;
         }
     } catch (e) {
         console.log(e);
     }
+}
+
+async function updateAdm(newAdminId, roomId) {
+    const room = await prisma.room.update({
+        where: {
+            id: roomId
+        },
+        data: {
+            idAdmin: newAdminId
+        },
+        include: {
+            UserRoom: {
+                include: {
+                    user: true
+                }
+            }
+        }
+    });
+
+    return room;
 }
 
 export const loginUser = async (data) => {

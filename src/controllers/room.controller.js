@@ -1,4 +1,4 @@
-import { activeStoryRepository, createRoom, getRoom, getRoomById, getRoomByIdGuidSimple, getRoomByUserId, getRooms, visualizationModeRep } from "../repositorys/room.repository";
+import { activeStoryRepository, createRoom, deleteRoomRepository, getRoom, getRoomById, getRoomByIdGuidSimple, getRoomByUserId, getRooms, newAdmRepository, visualizationModeRep } from "../repositorys/room.repository";
 import { voting, roomws } from "../../pubsub/pub-sub";
 
 export const create = async (req, res) => {
@@ -66,5 +66,27 @@ export const visualizationMode = async (req, res) => {
         res.status(200).send(story);
     } catch (e) {
         res.status(400).send(e);
+    }
+}
+
+export const newAdm = async (req,res) => {
+    try {
+        const room = await newAdmRepository(Number(req.params.id), req.body);
+        room.type = "newAdm";
+        roomws.publish(req.params.id, room)
+        res.status(200).send(room);
+    } catch (error) {
+        res.status(400).send(error);
+    }
+}
+
+export const deleteRoom = async (req,res) => {
+    try {
+        const room = await deleteRoomRepository(Number(req.params.id), req.body);
+        room.type = "deleteRoom";
+        roomws.publish(req.params.id, room)
+        res.status(200).send(room);
+    } catch (error) {
+        res.status(400).send(error);
     }
 }

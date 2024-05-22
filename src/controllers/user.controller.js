@@ -61,7 +61,6 @@ export const insert = async (req, res) => {
     try {
         const userRoom = await insertUserRoom(req.body);
         userRoom.type = 'insertUser';
-        console.log(req.body.roomId)
         roomws.publish(req.body.roomId, userRoom)
         res.status(200).send(userRoom)
     } catch (e) {

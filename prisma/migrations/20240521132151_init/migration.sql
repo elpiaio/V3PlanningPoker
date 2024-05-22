@@ -4,6 +4,7 @@ CREATE TABLE "Room" (
     "ServerId" TEXT NOT NULL,
     "roomName" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "idAdmin" INTEGER NOT NULL,
     "storyActive" INTEGER,
 
     CONSTRAINT "Room_pkey" PRIMARY KEY ("id")

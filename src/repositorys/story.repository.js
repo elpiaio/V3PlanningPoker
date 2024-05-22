@@ -41,7 +41,6 @@ export const deleteStory = async (id) => {
 
         return result;
     } catch (error) {
-        console.error(error);
         return { success: false, message: error.message };
     }
 }
