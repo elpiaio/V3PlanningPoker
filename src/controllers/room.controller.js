@@ -1,4 +1,4 @@
-import { activeStoryRepository, createRoom, deleteRoomRepository, getRoom, getRoomById, getRoomByIdGuidSimple, getRoomByUserId, getRooms, newAdmRepository, visualizationModeRep } from "../repositorys/room.repository";
+import { activeStoryRepository, apdateAdmOfNullRepository, createRoom, deleteRoomRepository, getRoom, getRoomById, getRoomByIdGuidSimple, getRoomByUserId, getRooms, newAdmRepository, visualizationModeRep } from "../repositorys/room.repository";
 import { voting, roomws } from "../../pubsub/pub-sub";
 
 export const create = async (req, res) => {
@@ -85,6 +85,15 @@ export const deleteRoom = async (req,res) => {
         const room = await deleteRoomRepository(Number(req.params.id), req.body);
         room.type = "deleteRoom";
         roomws.publish(req.params.id, room)
+        res.status(200).send(room);
+    } catch (error) {
+        res.status(400).send(error);
+    }
+}
+
+export const apdateAdmOfNull = async (req,res) => {
+    try {
+        const room = await apdateAdmOfNullRepository(req.body);
         res.status(200).send(room);
     } catch (error) {
         res.status(400).send(error);

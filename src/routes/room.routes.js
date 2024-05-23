@@ -1,4 +1,4 @@
-import { activeStory, create, deleteRoom, get, getById, getByIdGuid, getRoomByUser, newAdm, visualizationMode, } from "../controllers/room.controller";
+import { activeStory, apdateAdmOfNull, create, deleteRoom, get, getById, getByIdGuid, getRoomByUser, newAdm, visualizationMode, } from "../controllers/room.controller";
 
 export const roomRoutes = async app => {
     app.post("/room/:idUser", create);
@@ -10,4 +10,5 @@ export const roomRoutes = async app => {
     app.put("/story/visualizationMode/:id", visualizationMode) 
     app.put("/room/newAdm/:id", newAdm)
     app.delete("/room/deleteRoom/:id", deleteRoom)
+    app.put("/room/apdateAdmOfNull", apdateAdmOfNull)
 }

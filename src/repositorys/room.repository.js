@@ -153,18 +153,6 @@ export const newAdmRepository = async (id, data) => {
         },
         data: {
             idAdmin: data.idAdmin
-        },
-        include: {
-            UserRoom: {
-                include: {
-                    user: true
-                }
-            },
-            story: {
-                include: {
-                    votes: true
-                }
-            }
         }
     });
 
@@ -206,6 +194,42 @@ export const deleteRoomRepository = async (id, data) => {
         });
 
         return room;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+export const apdateAdmOfNullRepository = async (data) => {
+    try {
+        const rooms = await prisma.room.findMany({
+            where: {
+                idAdmin: null
+            },
+            include: {
+                UserRoom: true
+            }
+        });
+
+        const updatedRooms = await Promise.all(
+            rooms.map(async (room) => {
+                if (room.UserRoom.length > 0) {
+                    const updatedRoom = await prisma.room.update({
+                        where: {
+                            id: room.id
+                        },
+                        data: {
+                            idAdmin: room.UserRoom[0].userId
+                        }
+                    });
+
+                    return updatedRoom;
+                } else {
+                    return room;
+                }
+            })
+        );
+
+        return updatedRooms;
     } catch (error) {
         throw new Error(error);
     }
