@@ -1,5 +1,5 @@
 import { voting, roomws } from "../../pubsub/pub-sub";
-import { createUser, getUsersRoom, getById, updateUser, deleteUser, insertUserRoom, exitUserRoom, loginUser, emailValidatorRepository } from "../repositorys/user.repository";
+import { createUser, getUsersRoom, getById, updateUser, deleteUser, insertUserRoom, exitUserRoom, loginUser, emailValidatorRepository, passwordRecoveryRepository, passwordCodeRepository, replacePasswordRepository } from "../repositorys/user.repository";
 
 export const create = async (req, res) => {
     try {
@@ -89,4 +89,20 @@ export const login = async (req, res) => {
     }
 }
 
+export const passwordCode = async (req, res) => {
+    try {
+        const user = await passwordCodeRepository(req.body);
+        res.status(200).send(user)
+    } catch (e) {
+        res.status(400).send(e)
+    }
+}
 
+export const replacePassword = async (req, res) => {
+    try {
+        const user = await replacePasswordRepository(req.body);
+        res.status(200).send(user)
+    } catch (e) {
+        res.status(400).send(e)
+    }
+}

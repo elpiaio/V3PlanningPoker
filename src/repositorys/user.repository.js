@@ -228,3 +228,47 @@ export const loginUser = async (data) => {
     });
     return user;
 }
+
+export const passwordCodeRepository = async (data) => {
+    try {
+        const existingUser = await prisma.user.findFirst({
+            where: {
+                Email: data.Email,
+            }
+        });
+        if (!existingUser) { throw new Error('Usuário não existe'); }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(data.Email)) {
+            throw new Error('E-mail inválido');
+        }
+
+        const randomNumber = Math.floor(100000 + Math.random() * 900000);
+        console.log(randomNumber);
+
+        await sendEmail(data.Email, 'Tunad | PlanningPoker', `código de recuperação ${randomNumber}`);
+
+        return randomNumber;
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+
+export const replacePasswordRepository = async (data) => {
+    try {
+        const user = await prisma.user.updateMany({
+            where: {
+                Email: data.Email
+            },
+            data: {
+                Password: data.newPassword
+            }
+        });
+
+        return user;
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
