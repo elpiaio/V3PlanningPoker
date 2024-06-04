@@ -1,5 +1,5 @@
 import { voting, roomws } from "../../pubsub/pub-sub";
-import { createUser, getUsersRoom, getById, updateUser, deleteUser, insertUserRoom, exitUserRoom, loginUser, emailValidatorRepository, passwordRecoveryRepository, passwordCodeRepository, replacePasswordRepository } from "../repositorys/user.repository";
+import { createUser, getUsersRoom, getById, updateUser, deleteUser, insertUserRoom, exitUserRoom, loginUser, emailValidatorRepository, passwordRecoveryRepository, passwordCodeRepository, replacePasswordRepository, getByEmailRepository } from "../repositorys/user.repository";
 
 export const create = async (req, res) => {
     try {
@@ -17,7 +17,7 @@ export const emailValidator = async (req, res) => {
     } catch (e) {
         res.status(400).send(e)
     }
-   
+
 }
 
 export const getUsersRoom = async (req, res) => {
@@ -33,6 +33,20 @@ export const getUsersRoom = async (req, res) => {
 export const getById = async (req, res) => {
     try {
         const user = await getById(Number(req.params.id));
+        res.status(200).send(user)
+    } catch (e) {
+        res.status(400).send(e)
+    }
+}
+
+export const getByEmail = async (req, res) => {
+    try {
+        const { email } = req.params;
+        console.log('Email:', email);
+        if (!email) {
+            return res.status(400).send({ error: "Email is required" });
+        }
+        const user = await getByEmailRepository(email);
         res.status(200).send(user)
     } catch (e) {
         res.status(400).send(e)
@@ -71,7 +85,7 @@ export const insert = async (req, res) => {
 export const leaveRoom = async (req, res) => {
     try {
         const user = await exitUserRoom(req.body);
-        user.type = 'removeUser'; 
+        user.type = 'removeUser';
         roomws.publish(req.body.roomId, user)
         res.status(200).send(user)
     } catch (e) {
