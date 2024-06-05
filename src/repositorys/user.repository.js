@@ -1,5 +1,5 @@
 import { prisma } from "../services/prisma";
-import { sendEmail } from "../services/sendEmail";
+import { sendEmail } from "../services/nodemailer";
 
 export const createUser = async (data) => {
     try {
