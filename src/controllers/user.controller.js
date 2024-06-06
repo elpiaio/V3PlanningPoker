@@ -1,5 +1,5 @@
 import { voting, roomws } from "../../pubsub/pub-sub";
-import { createUser, getUsersRoom, getById, updateUser, deleteUser, insertUserRoom, exitUserRoom, loginUser, emailValidatorRepository, passwordRecoveryRepository, passwordCodeRepository, replacePasswordRepository, getByEmailRepository } from "../repositorys/user.repository";
+import { createUser, getUsersRoom, getById, updateUser, deleteUser, insertUserRoom, exitUserRoom, loginUser, emailValidatorRepository, passwordRecoveryRepository, passwordCodeRepository, replacePasswordRepository, getByEmailRepository, UpdateStatusRepository } from "../repositorys/user.repository";
 
 export const create = async (req, res) => {
     try {
@@ -118,5 +118,17 @@ export const replacePassword = async (req, res) => {
         res.status(200).send(user)
     } catch (e) {
         res.status(400).send(e)
+    }
+}
+
+export const updateStatus = async (req, res) => {
+    try {
+        const object = {}
+        object.userRoom = await UpdateStatusRepository(req.body);
+        object.type = 'updateStatus';
+        roomws.publish(req.body.roomId, object)
+        res.status(200).send(object);
+    } catch (error) {
+        res.status(400).send(error);
     }
 }

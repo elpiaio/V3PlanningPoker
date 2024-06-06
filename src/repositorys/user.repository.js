@@ -326,3 +326,38 @@ export const replacePasswordRepository = async (data) => {
         return error
     }
 }
+
+export const UpdateStatusRepository = async (data) => {
+    try {
+        const user = await prisma.userRoom.updateMany({
+            where: {
+                roomId: data.roomId,
+                userId: data.userId
+            },
+            data: {
+                status: data.status
+            }
+        });
+
+        const userRoom = await prisma.userRoom.findMany({
+            where: {
+                roomId: data.roomId
+            },
+            include: {
+                user: {
+                    select : {
+                        id: true,
+                        Name: true,
+                        Email: true,
+                        Password: false
+                    }
+                }
+            }
+        })
+        
+        return userRoom;
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}

@@ -1,4 +1,4 @@
-import { create,getById, update, remove, insert, leaveRoom, login, getUsersRoom, emailValidator, passwordCode, replacePassword, getByEmail } from "../controllers/user.controller";
+import { create,getById, update, remove, insert, leaveRoom, login, getUsersRoom, emailValidator, passwordCode, replacePassword, getByEmail, updateStatus } from "../controllers/user.controller";
 
 export const userRoutes = async app => {
     app.post("/user", create);
@@ -13,5 +13,6 @@ export const userRoutes = async app => {
     app.post("/user/login", login);
     app.post("/user/passwordCode", passwordCode)
     app.put("/user/replacePassword", replacePassword)
+    app.put("/user/updateStatus", updateStatus)
 }
 
