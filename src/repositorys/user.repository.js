@@ -1,8 +1,12 @@
 import { prisma } from "../services/prisma";
 import { sendEmail } from "../services/nodemailer";
+import { validatePassword } from "../services/validatePassword";
 
 export const createUser = async (data) => {
     try {
+        const validation = await passwordValidatorRepository(data);
+        if (validation !== "success") throw new Error("invalidPassword");
+
         const existingUser = await prisma.user.findFirst({
             where: {
                 Email: data.Email
@@ -345,7 +349,7 @@ export const UpdateStatusRepository = async (data) => {
             },
             include: {
                 user: {
-                    select : {
+                    select: {
                         id: true,
                         Name: true,
                         Email: true,
@@ -354,8 +358,25 @@ export const UpdateStatusRepository = async (data) => {
                 }
             }
         })
-        
+
         return userRoom;
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+
+export const passwordValidatorRepository = async (data) => {
+    try {
+        if (data.Password.length < 4) {
+            return "minimalCharacters"
+        }
+
+        if (validatePassword(data.Password)) {
+            return "success";
+        } else {
+            return "invalidPassword";
+        }
     } catch (error) {
         console.log(error)
         return error

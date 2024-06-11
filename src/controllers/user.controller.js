@@ -1,5 +1,5 @@
 import { voting, roomws } from "../../pubsub/pub-sub";
-import { createUser, getUsersRoom, getById, updateUser, deleteUser, insertUserRoom, exitUserRoom, loginUser, emailValidatorRepository, passwordRecoveryRepository, passwordCodeRepository, replacePasswordRepository, getByEmailRepository, UpdateStatusRepository } from "../repositorys/user.repository";
+import { createUser, getUsersRoom, getById, updateUser, deleteUser, insertUserRoom, exitUserRoom, loginUser, emailValidatorRepository, passwordRecoveryRepository, passwordCodeRepository, replacePasswordRepository, getByEmailRepository, UpdateStatusRepository, passwordValidatorRepository } from "../repositorys/user.repository";
 
 export const create = async (req, res) => {
     try {
@@ -130,5 +130,15 @@ export const updateStatus = async (req, res) => {
         res.status(200).send(object);
     } catch (error) {
         res.status(400).send(error);
+    }
+}
+
+export const passwordValidator = async (req, res) => {
+    try {
+        const validation = {}
+        validation.message = await passwordValidatorRepository(req.body);
+        res.status(200).send(validation)
+    } catch (e) {
+        res.status(400).send(e)
     }
 }
