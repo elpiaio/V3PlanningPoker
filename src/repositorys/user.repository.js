@@ -368,7 +368,7 @@ export const UpdateStatusRepository = async (data) => {
 
 export const passwordValidatorRepository = async (data) => {
     try {
-        if (data.Password.length < 4) {
+        if (data.Password.length < 8) {
             return "minimalCharacters"
         }
 
