@@ -8,6 +8,18 @@ export const createVote = async (data) => {
         }
     });
 
+    const story = await prisma.story.findFirst({
+        where: {
+            id: data.storyId
+        }
+    })
+
+    const nullVote = {
+        vote: null,
+        userVoted: true,
+        userId: data.userId
+    }
+
     if (existingVote) {
         await prisma.vote.updateMany({
             where: {
@@ -18,24 +30,23 @@ export const createVote = async (data) => {
                 vote: data.vote
             },
         });
-        return data;
-    } else {
 
-        const voteValue = data.vote; // ou qualquer outra lógica para obter o valor do voto
-        
-        const vote2 = await prisma.vote.create({
-          data: {
-            userId: data.userId,
-            vote: voteValue,
-            storyId: data.storyId
-          }
+        if (story.showVotes) { return data }
+
+        return nullVote
+
+    } else {
+        const vote = await prisma.vote.create({
+            data: {
+                userId: data.userId,
+                vote: data.vote,
+                storyId: data.storyId
+            }
         })
 
+        if (story.showVotes) { return vote; }
 
-        // const vote = await prisma.vote.create({
-        //     data
-        // })
-        return vote2
+        return nullVote
     }
 }
 
@@ -83,3 +94,47 @@ export const votingTrue = async (data) => {
     return updatedStory;
 }
 
+export const getNewVoteRepository = async (data) => {
+    const existingVote = await prisma.vote.findFirst({
+        where: {
+            userId: data.userId,
+            storyId: data.storyId,
+        },
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    Name: true,
+                    Email: false,
+                    Password: false
+                }
+            }
+        }
+    });
+
+    return existingVote;
+}
+
+export const getVotesRepository = async (data) => {
+    const votes = await prisma.story.findFirst({
+        where: {
+            id: data.id,
+        },
+        include: {
+            votes: {
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            Name: true,
+                            Email: false,
+                            Password: false
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    return votes;
+}

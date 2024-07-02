@@ -29,7 +29,6 @@ export const wsRoutes = async (app) => {
         })
 
         connection.socket.on('close', async () => {
-            console.log("passou")
             clients.delete({ userId });
 
             const object = {}
