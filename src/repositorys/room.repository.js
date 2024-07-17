@@ -27,31 +27,65 @@ export const getRooms = async (data) => {
 }
 
 export const getRoomById = async (id) => {
-    const room = await prisma.room.findUnique({
-        where: {
-            id
-        },
-        include: {
-            UserRoom: {
-                include: {
-                    user: {
-                        select: {
-                            id: true,
-                            Name: true,
-                            Password: false
+    try {
+        const room = await prisma.room.findUnique({
+            where: {
+                id
+            },
+            include: {
+                UserRoom: {
+                    include: {
+                        user: {
+                            select: {
+                                id: true,
+                                Name: true,
+                                Password: false
+                            }
                         }
                     }
-                }
-            },
-            story: {
-                include: {
-                    votes: true
+                },
+                story: {
+                    include: {
+                        votes: true
+                    }
                 }
             }
+        });
+
+        if (room && room.story.length > 0) {
+            const activeStory = room.story.find(s => s.id === room.storyActive);
+
+            if (activeStory && activeStory.showVotes) {
+                room.story.forEach(story => {
+                    story.votes = story.votes.map(vote => {
+                        return {
+                            id: vote.id,
+                            userId: vote.userId,
+                            storyId: vote.storyId,
+                            vote: activeStory.showVotes ? vote.vote : null
+                        };
+                    });
+                });
+            } else {
+                room.story.forEach(story => {
+                    story.votes = story.votes.map(vote => {
+                        return {
+                            id: vote.id,
+                            userId: vote.userId,
+                            storyId: vote.storyId,
+                            vote: null
+                        };
+                    });
+                });
+            }
         }
-    });
-    return room;
-}
+
+        return room;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+};
 
 export const getRoomByIdGuidSimple = async (id) => {
     const room = await prisma.room.findFirst({

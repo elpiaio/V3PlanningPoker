@@ -1,52 +1,56 @@
 import { prisma } from "../services/prisma";
 
 export const createVote = async (data) => {
-    const existingVote = await prisma.vote.findFirst({
-        where: {
-            userId: data.userId,
-            storyId: data.storyId,
-        }
-    });
-
-    const story = await prisma.story.findFirst({
-        where: {
-            id: data.storyId
-        }
-    })
-
-    const nullVote = {
-        vote: null,
-        userVoted: true,
-        userId: data.userId
-    }
-
-    if (existingVote) {
-        await prisma.vote.updateMany({
+    try {
+        const existingVote = await prisma.vote.findFirst({
             where: {
                 userId: data.userId,
                 storyId: data.storyId,
-            },
-            data: {
-                vote: data.vote
-            },
+            }
         });
 
-        if (story.showVotes) { return data }
-
-        return nullVote
-
-    } else {
-        const vote = await prisma.vote.create({
-            data: {
-                userId: data.userId,
-                vote: data.vote,
-                storyId: data.storyId
+        const story = await prisma.story.findFirst({
+            where: {
+                id: data.storyId
             }
         })
 
-        if (story.showVotes) { return vote; }
+        const nullVote = {
+            vote: null,
+            userVoted: true,
+            userId: data.userId,
+            storyId: data.storyId,
+        }
 
-        return nullVote
+        if (existingVote) {
+            await prisma.vote.updateMany({
+                where: {
+                    userId: data.userId,
+                    storyId: data.storyId,
+                },
+                data: {
+                    vote: data.vote
+                },
+            });
+
+            if (story.showVotes) { return data }
+            return nullVote
+
+        } else {
+            const vote = await prisma.vote.create({
+                data: {
+                    userId: data.userId,
+                    vote: data.vote,
+                    storyId: data.storyId
+                }
+            })
+
+            if (story.showVotes) { return vote; }
+            return nullVote;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
     }
 }
 
